@@ -1,4 +1,4 @@
-English Translation by MonkeyWhisper
+Thanks to MonkeyWhisper for English Translation
 
 # qb-bossmenu
 New bossmenu converted to qb-menu and qb-input.
