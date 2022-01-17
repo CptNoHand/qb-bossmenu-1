@@ -28,5 +28,5 @@ if there are any problems or other, do not hesitate to contact me or to open a p
 - Add the following code `ensure qb-bossmenu` to your server.cfg/resouces.cfg
 
 ## ATTENTION
-### YOU NEED TO CREATE A COLUMN IN DATABASE WITH NAME OF SOCIETY IN BOSSMENU TABLE OR GANG IN GANGMENU TABLE
+### YOU NEED TO CREATE A ROW IN DATABASE WITH NAME OF SOCIETY IN BOSSMENU TABLE OR GANG IN GANGMENU TABLE
 ![database](https://i.imgur.com/JZnEK4M.png)
