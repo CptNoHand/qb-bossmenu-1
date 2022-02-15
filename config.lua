@@ -20,6 +20,7 @@ Config.Jobs = {
     ['redline'] = vector3(-605.41, -919.55, 23.89),
     ['government'] = vector3(-520.73, -170.02, 42.84),
     ['catcafe'] = vector3(-578.23, -1067.65, 26.12),
+    ['custommotors'] = vector3(36.71, 6464.02, 32.09),
 }
 
 Config.Gangs = {
