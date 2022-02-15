@@ -3,7 +3,7 @@ local GangaccountGangs = {}
 
 CreateThread(function()
 	Wait(500)
-	local gangmenu = exports.oxmysql:executeSync('SELECT * FROM gangmenu', {})
+	local gangmenu = MySQL.Sync.fetchAll('SELECT * FROM gangmenu', {})
 	if not gangmenu then
 		return
 	end
@@ -34,7 +34,7 @@ RegisterNetEvent("qb-gangmenu:server:withdrawMoney", function(amount)
 		return
 	end
 
-	exports.oxmysql:execute('UPDATE gangmenu SET amount = ? WHERE job_name = ?', { GangaccountGangs[gang], gang })
+	MySQL.Async.execute('UPDATE gangmenu SET amount = ? WHERE job_name = ?', { GangaccountGangs[gang], gang })
 	TriggerEvent('qb-log:server:CreateLog', 'gangmenu', 'Withdraw Money', 'yellow', xPlayer.PlayerData.charinfo.firstname .. ' ' .. xPlayer.PlayerData.charinfo.lastname .. ' successfully withdrew $' .. amount .. ' (' .. gang .. ')', false)
 	TriggerClientEvent('QBCore:Notify', src, "You have withdrawn: $" ..amount, "success")
 	TriggerClientEvent('qb-gangmenu:client:mainmenu', src)
@@ -57,7 +57,7 @@ RegisterNetEvent("qb-gangmenu:server:depositMoney", function(amount)
 		return
 	end
 
-	exports.oxmysql:execute('UPDATE gangmenu SET amount = ? WHERE job_name = ?', { GangaccountGangs[gang], gang })
+	MySQL.Async.execute('UPDATE gangmenu SET amount = ? WHERE job_name = ?', { GangaccountGangs[gang], gang })
 	TriggerEvent('qb-log:server:CreateLog', 'gangmenu', 'Deposit Money', 'yellow', xPlayer.PlayerData.charinfo.firstname .. ' ' .. xPlayer.PlayerData.charinfo.lastname .. ' successfully deposited $' .. amount .. ' (' .. gang .. ')', false)
 	TriggerClientEvent('QBCore:Notify', src, "You have deposited: $" ..amount, "success")
 	TriggerClientEvent('qb-gangmenu:client:mainmenu', src)
@@ -69,7 +69,7 @@ RegisterNetEvent("qb-gangmenu:server:addaccountGangMoney", function(accountGang,
 	end
 
 	GangaccountGangs[accountGang] = GangaccountGangs[accountGang] + amount
-	exports.oxmysql:execute('UPDATE gangmenu SET amount = ? WHERE job_name = ?', { GangaccountGangs[accountGang], accountGang })
+	MySQL.Async.execute('UPDATE gangmenu SET amount = ? WHERE job_name = ?', { GangaccountGangs[accountGang], accountGang })
 end)
 
 RegisterNetEvent("qb-gangmenu:server:removeaccountGangMoney", function(accountGang, amount)
@@ -81,7 +81,7 @@ RegisterNetEvent("qb-gangmenu:server:removeaccountGangMoney", function(accountGa
 		GangaccountGangs[accountGang] = GangaccountGangs[accountGang] - amount
 	end
 
-	exports.oxmysql:execute('UPDATE gangmenu SET amount = ? WHERE job_name = ?', { GangaccountGangs[accountGang], accountGang })
+	MySQL.Async.execute('UPDATE gangmenu SET amount = ? WHERE job_name = ?', { GangaccountGangs[accountGang], accountGang })
 end)
 
 QBCore.Functions.CreateCallback('qb-gangmenu:server:GetAccount', function(source, cb, GangName)
@@ -101,7 +101,7 @@ QBCore.Functions.CreateCallback('qb-gangmenu:server:GetEmployees', function(sour
 	if not GangaccountGangs[gangname] then
 		GangaccountGangs[gangname] = 0
 	end
-	local players = exports.oxmysql:executeSync("SELECT * FROM `players` WHERE `gang` LIKE '%".. gangname .."%'", {})
+	local players = MySQL.Sync.fetchAll("SELECT * FROM `players` WHERE `gang` LIKE '%".. gangname .."%'", {})
 	if players[1] ~= nil then
 		for key, value in pairs(players) do
 			local isOnline = QBCore.Functions.GetPlayerByCitizenId(value.citizenid)
@@ -158,7 +158,7 @@ RegisterNetEvent('qb-gangmenu:server:licenziaGiocatore', function(target)
 			TriggerClientEvent('QBCore:Notify', src, "Error.", "error")
 		end
 	else
-		local player = exports.oxmysql:executeSync('SELECT * FROM players WHERE citizenid = ? LIMIT 1', {target})
+		local player = MySQL.Sync.fetchAll('SELECT * FROM players WHERE citizenid = ? LIMIT 1', {target})
 		if player[1] ~= nil then
 			Employee = player[1]
 			local gang = {}
@@ -170,7 +170,7 @@ RegisterNetEvent('qb-gangmenu:server:licenziaGiocatore', function(target)
 			gang.grade = {}
 			gang.grade.name = nil
 			gang.grade.level = 0
-			exports.oxmysql:execute('UPDATE players SET gang = ? WHERE citizenid = ?', {json.encode(gang), target})
+			MySQL.Async.execute('UPDATE players SET gang = ? WHERE citizenid = ?', {json.encode(gang), target})
 			TriggerClientEvent('QBCore:Notify', src, "Gang member fired!", "success")
 			TriggerEvent("qb-log:server:CreateLog", "gangmenu", "Gang Fire", "orange", Player.PlayerData.charinfo.firstname .. " " .. Player.PlayerData.charinfo.lastname .. ' successfully fired ' .. Employee.PlayerData.charinfo.firstname .. " " .. Employee.PlayerData.charinfo.lastname .. " (" .. Player.PlayerData.gang.name .. ")", false)
 		else
